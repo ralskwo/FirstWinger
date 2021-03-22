@@ -44,7 +44,7 @@ public class BaseSceneMain : MonoBehaviour
 
     }
 
-    public virtual void UpdateScene()
+    protected virtual void UpdateScene()
     {
 
     }

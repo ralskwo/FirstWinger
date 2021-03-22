@@ -151,7 +151,7 @@ public class UIDamage : MonoBehaviour
                     // 상태를 없음으로 바꾸고
                     damageState = DamageState.None;
                     // SystemManager를 통해 이 DamageManger를 삭제한다.
-                    SystemManager.Instance.DamageManager.Remove(this);
+                    SystemManager.Instance.GetCurrentSceneMain<InGameSceneMain>().DamageManager.Remove(this);
                 }
 
                 break;

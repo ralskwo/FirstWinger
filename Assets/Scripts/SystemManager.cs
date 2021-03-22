@@ -14,106 +14,6 @@ public class SystemManager : MonoBehaviour
     }
 
     [SerializeField]
-    Player player;
-
-    public Player Hero
-    {
-        get
-        {
-            return player;
-        }
-    }
-
-    GamePointAccumulator gamePointAccumulator = new GamePointAccumulator();
-
-    public GamePointAccumulator GamePointAccumulator
-    {
-        get
-        {
-            return gamePointAccumulator;
-        }
-    }
-
-    [SerializeField]
-    EffectManager effectManager;
-
-    public EffectManager EffectManager
-    {
-        get
-        {
-            return effectManager;
-        }
-    }
-
-    [SerializeField]
-    EnemyManager enemyManager;
-
-    public EnemyManager EnemyManager
-    {
-        get
-        {
-            return enemyManager;
-        }
-    }
-
-    [SerializeField]
-    BulletManager bulletManager;
-    public BulletManager BulletManager
-    {
-        get
-        {
-            return bulletManager;
-        }
-    }
-
-    [SerializeField]
-    DamageManager damageManager;
-    public DamageManager DamageManager
-    {
-        get
-        {
-            return damageManager;
-        }
-    }
-
-
-    PrefabCacheSystem enemyCacheSystem = new PrefabCacheSystem();
-    public PrefabCacheSystem EnemyCacheSystem
-    {
-        get
-        {
-            return enemyCacheSystem;
-        }
-    }
-
-    PrefabCacheSystem bulletCacheSystem = new PrefabCacheSystem();
-    public PrefabCacheSystem BulletCacheSystem
-    {
-        get
-        {
-            return bulletCacheSystem;
-        }
-    }
-
-    PrefabCacheSystem effectCacheSystem = new PrefabCacheSystem();
-    public PrefabCacheSystem EffectCacheSystem
-    {
-        get
-        {
-            return effectCacheSystem;
-        }
-    }
-
-    PrefabCacheSystem damageCacheSystem = new PrefabCacheSystem();
-    public PrefabCacheSystem DamageCacheSystem
-    {
-        get
-        {
-            return damageCacheSystem;
-        }
-    }
-
-    [SerializeField]
     EnemyTable enemyTable;
     public EnemyTable EnemyTable
     {
@@ -123,13 +23,22 @@ public class SystemManager : MonoBehaviour
         }
     }
 
+    BaseSceneMain currentSceneMain;
+    public BaseSceneMain CurrentSceneMain
+    {
+        set
+        {
+            currentSceneMain = value;
+        }
+    }
+
 
     private void Awake()
     {
         // 유일하게 존재할 수 있도록 에러 처리
         if (instance != null)
         {
-            Debug.LogError("SystemManager error! Singletone error!");
+            Debug.LogError("SystemManager is initialized twice!");
             Destroy(gameObject);
             return;
         }
@@ -143,12 +52,20 @@ public class SystemManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        BaseSceneMain baseSceneMain = GameObject.FindObjectOfType<BaseSceneMain>();
+        Debug.Log("OnSceneLoaded! baseSceneMain.name = " + baseSceneMain.name);
+        SystemManager.Instance.CurrentSceneMain = baseSceneMain;
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+
+    public T GetCurrentSceneMain<T>()
+        where T:BaseSceneMain
+    {
+        return currentSceneMain as T;
     }
 }

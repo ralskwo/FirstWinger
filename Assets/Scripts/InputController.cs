@@ -41,16 +41,16 @@ public class InputController : MonoBehaviour
             moveDirection.x = 1;
         }
 
-        SystemManager.Instance.Hero.ProcessInput(moveDirection);
+        SystemManager.Instance.GetCurrentSceneMain<InGameSceneMain>().Hero.ProcessInput(moveDirection);
     }
 
     void UpdateMouse()
     {
         // [0, 1, 2, ...] : 마우스 왼쪽 버튼, 오른쪽 버튼, 중간(휠)버튼, 여타 추가 마우스 버튼들...
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
         {
             // Debug.Log("click");
-            SystemManager.Instance.Hero.Fire();
+            SystemManager.Instance.GetCurrentSceneMain<InGameSceneMain>().Hero.Fire();
         }
     }
 }

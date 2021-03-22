@@ -116,8 +116,8 @@ public class Player : Actor
         // GameObject go = Instantiate(Bullet);
 
         // Bullet bullet = go.GetComponent<Bullet>();
-        Bullet bullet = SystemManager.Instance.BulletManager.Generate(BulletManager.PlayerBulletIndex);
-        bullet.Fire(OwnerSide.Player, FireTransform.position, FireTransform.right, BulletSpeed, Damage);
+        Bullet bullet = SystemManager.Instance.GetCurrentSceneMain<InGameSceneMain>().BulletManager.Generate(BulletManager.PlayerBulletIndex);
+        bullet.Fire(this, FireTransform.position, FireTransform.right, BulletSpeed, Damage);
     }
 
     protected override void DecreasedHP(Actor attacker, int value, Vector3 damagePos)
@@ -127,7 +127,7 @@ public class Player : Actor
         playerStatePanel.SetHP(CurrentHP, MaxHP);
 
         Vector3 damagePoint = damagePos + Random.insideUnitSphere * 0.5f;
-        SystemManager.Instance.DamageManager.Generate(DamageManager.PlayerDamageIndex, damagePoint, value, Color.red);
+        SystemManager.Instance.GetCurrentSceneMain<InGameSceneMain>().DamageManager.Generate(DamageManager.PlayerDamageIndex, damagePoint, value, Color.red);
     }
 
 

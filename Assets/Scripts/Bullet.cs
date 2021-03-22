@@ -3,16 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum OwnerSide : int
-{
-    Player = 0,
-    Enemy
-}
-
 public class Bullet : MonoBehaviour
 {
     const float LiftTime = 15.0f;
-    OwnerSide ownerSide = OwnerSide.Player;
 
     [SerializeField]
     Vector3 MoveDirection = Vector3.zero;
@@ -20,11 +13,11 @@ public class Bullet : MonoBehaviour
     [SerializeField]
     float Speed = 0.0f;
 
-    bool NeedMove = false;
+    bool NeedMove = false;      // 이동 플래그
 
     float FiredTime;
 
-    bool Hited = false;
+    bool Hited = false;         // 충돌 플래그
 
     [SerializeField]
     int Damage = 1;
@@ -35,6 +28,11 @@ public class Bullet : MonoBehaviour
     {
         get;
         set;
+    }
+
+    void Start()
+    {
+        
     }
 
     // Update is called once per frame
@@ -59,9 +57,9 @@ public class Bullet : MonoBehaviour
         transform.position += moveVector;
     }
 
-    public void Fire(OwnerSide FireOwner, Vector3 firePosition, Vector3 direction, float speed, int damage)
+    public void Fire(Actor owner, Vector3 firePosition, Vector3 direction, float speed, int damage)
     {
-        ownerSide = FireOwner;
+        Owner = owner;
         transform.position = firePosition;
         MoveDirection = direction;
         Speed = speed;
@@ -73,9 +71,13 @@ public class Bullet : MonoBehaviour
 
     Vector3 AdjustMove(Vector3 moveVector)
     {
+        // 레이캐스트 힛 초기화
         RaycastHit hitInfo;
         if (Physics.Linecast(transform.position, transform.position + moveVector, out hitInfo))
         {
+            Actor actor = hitInfo.collider.GetComponentInParent<Actor>();
+            if (actor && actor.IsDead)
+                return moveVector;
 
             moveVector = hitInfo.point - transform.position;
             OnBulletCollision(hitInfo.collider);
@@ -102,15 +104,13 @@ public class Bullet : MonoBehaviour
 
         actor.OnBulletHited(Owner, Damage, transform.position);
 
-
-
         Collider myCollider = GetComponentInChildren<Collider>();
         myCollider.enabled = false;
 
         Hited = true;
         NeedMove = false;
 
-        GameObject go = SystemManager.Instance.EffectManager.GenerateEffect(EffectManager.BulletDisappearFxIndex, transform.position);
+        GameObject go = SystemManager.Instance.GetCurrentSceneMain<InGameSceneMain>().EffectManger.GenerateEffect(EffectManager.BulletDisappearFxIndex, transform.position);
         go.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
         Disappear();
 
@@ -144,6 +144,6 @@ public class Bullet : MonoBehaviour
 
     void Disappear()
     {
-        Destroy(gameObject);
+        SystemManager.Instance.GetCurrentSceneMain<InGameSceneMain>().BulletManager.Remove(this);
     }
 }

@@ -62,7 +62,7 @@ public class DamageManager : MonoBehaviour
         for (int i = 0; i < Files.Length; i++)
         {
             GameObject go = Load(Files[i].filePath);
-            SystemManager.Instance.DamageCacheSystem.GenerateCache(Files[i].filePath, go, Files[i].cacheCount, canvasTransform);
+            SystemManager.Instance.GetCurrentSceneMain<InGameSceneMain>().DamageCacheSystem.GenerateCache(Files[i].filePath, go, Files[i].cacheCount, canvasTransform);
         }
     }
 
@@ -75,7 +75,7 @@ public class DamageManager : MonoBehaviour
         }
 
         string filePath = Files[index].filePath;
-        GameObject go = SystemManager.Instance.DamageCacheSystem.Archive(filePath);
+        GameObject go = SystemManager.Instance.GetCurrentSceneMain<InGameSceneMain>().DamageCacheSystem.Archive(filePath);
         go.transform.position = Camera.main.WorldToScreenPoint(position);
 
         UIDamage damage = go.GetComponent<UIDamage>();
@@ -87,7 +87,7 @@ public class DamageManager : MonoBehaviour
 
     public bool Remove(UIDamage damage)
     {
-        SystemManager.Instance.DamageCacheSystem.Restore(damage.FilePath, damage.gameObject);
+        SystemManager.Instance.GetCurrentSceneMain<InGameSceneMain>().DamageCacheSystem.Restore(damage.FilePath, damage.gameObject);
         return true;
     }
 }

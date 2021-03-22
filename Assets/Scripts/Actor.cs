@@ -94,6 +94,6 @@ public class Actor : MonoBehaviour
         Debug.Log(name + " OnDead");
         isDead = true;
 
-        SystemManager.Instance.EffectManager.GenerateEffect(EffectManager.ActorDeadFxIndex, transform.position);
+        SystemManager.Instance.GetCurrentSceneMain<InGameSceneMain>().EffectManger.GenerateEffect(EffectManager.ActorDeadFxIndex, transform.position);
     }
 }
