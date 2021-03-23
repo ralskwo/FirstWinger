@@ -6,9 +6,11 @@ public class TitleSceneMain : BaseSceneMain
 {
     public void OnStartButton()
     {
-        Debug.Log("OnStartButton");
+        PanelManager.GetPanel(typeof(NetworkConfigPanal)).Show();
+    }
 
+    public void GotoNextScene()
+    {
         SceneController.Instance.LoadScene(SceneNameConstants.LoadingScene);
-        //SceneController.Instance.LoadSceneAdditive(SceneNameConstants.LoadingScene);
     }
 }

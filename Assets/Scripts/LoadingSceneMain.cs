@@ -34,7 +34,7 @@ public class LoadingSceneMain : BaseSceneMain
             LoadingText.text = LoadingTextValue.Substring(0, TextIndex + 1);
 
             TextIndex++;
-            if(TextIndex >= LoadingTextValue.Length)
+            if (TextIndex >= LoadingTextValue.Length)
             {
                 TextIndex = 0;
             }
@@ -48,11 +48,31 @@ public class LoadingSceneMain : BaseSceneMain
             {
                 GotoNextScene();
             }
-        }        
+        }
     }
     void GotoNextScene()
     {
-        SceneController.Instance.LoadScene(SceneNameConstants.InGame);
+        NetworkConnectionInfo info = SystemManager.Instance.ConnectionInfo;
+        if (info.Host)
+        {
+            Debug.Log("FW Start with host!");
+            FWNetworkManager.singleton.StartHost();
+        }
+
+        else
+        {
+            Debug.Log("FW Start with client!");
+
+            if (!string.IsNullOrEmpty(info.IPAddress))
+                FWNetworkManager.singleton.networkAddress = info.IPAddress;
+
+            if (info.Port != FWNetworkManager.singleton.networkPort)
+                FWNetworkManager.singleton.networkPort = info.Port;
+
+            FWNetworkManager.singleton.StartClient();
+        }
+
+
         NextSceneCall = true;
     }
 }

@@ -32,6 +32,17 @@ public class SystemManager : MonoBehaviour
         }
     }
 
+    [SerializeField]
+    NetworkConnectionInfo connectionInfo = new NetworkConnectionInfo();
+
+    public NetworkConnectionInfo ConnectionInfo
+    {
+        get
+        {
+            return connectionInfo;
+        }
+    }
+
 
     private void Awake()
     {
@@ -64,7 +75,7 @@ public class SystemManager : MonoBehaviour
     }
 
     public T GetCurrentSceneMain<T>()
-        where T:BaseSceneMain
+        where T : BaseSceneMain
     {
         return currentSceneMain as T;
     }

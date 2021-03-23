@@ -2,22 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputController : MonoBehaviour
+public class InputController
 {
-    // Start is called before the first frame update
-    void Start()
+    public void UpdateInput()
     {
+        if (SystemManager.Instance.GetCurrentSceneMain<InGameSceneMain>().CurrentGameState != InGameSceneMain.GameState.Running)
+            return;
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        UpdateInput();
+        UpdateKeyboard();
         UpdateMouse();
     }
 
-    void UpdateInput()
+
+    void UpdateKeyboard()
     {
         Vector3 moveDirection = Vector3.zero;
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))

@@ -36,6 +36,7 @@ public class SquadronScheduleTable : TableLoader<SquadronScheduleDataSturct>
 
     public SquadronScheduleDataSturct GetScheduleData(int index)
     {
+
         if (index < 0 || index >= tableDatas.Count)
         {
             Debug.LogError("SquadronScheduleDataStruct Error! index = " + index);

@@ -6,10 +6,10 @@ public class InGameSceneMain : BaseSceneMain
 {
     const float GameReadyIntaval = 3.0f;
 
-    public enum GameState: int
+    public enum GameState : int
     {
-        Ready=0,
-        Running, 
+        Ready = 0,
+        Running,
         End,
     }
 
@@ -36,10 +36,14 @@ public class InGameSceneMain : BaseSceneMain
 
             return player;
         }
+        set
+        {
+            player = value;
+        }
     }
 
     GamePointAccumulator gamePointAccumulator = new GamePointAccumulator();
-    
+
     public GamePointAccumulator GamePointAccumulator
     {
         get
@@ -139,6 +143,17 @@ public class InGameSceneMain : BaseSceneMain
 
     float SceneStartTime;
 
+    [SerializeField]
+    Transform mainBGQuadTransform;
+
+    public Transform MainBGQuadTransform
+    {
+        get
+        {
+            return mainBGQuadTransform;
+        }
+    }
+
     protected override void OnStart()
     {
         SceneStartTime = Time.time;
@@ -149,11 +164,11 @@ public class InGameSceneMain : BaseSceneMain
         base.UpdateScene();
 
         float currentTime = Time.time;
-        if(currentGameState == GameState.Ready)
+        if (currentGameState == GameState.Ready)
         {
-            if(currentTime - SceneStartTime > GameReadyIntaval)
+            if (currentTime - SceneStartTime > GameReadyIntaval)
             {
-                SquadronManager.StartGame();
+                //SquadronManager.StartGame();
                 currentGameState = GameState.Running;
             }
         }
