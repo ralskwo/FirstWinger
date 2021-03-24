@@ -6,18 +6,23 @@ using UnityEngine.Networking;
 public class Actor : NetworkBehaviour
 {
     [SerializeField]
+    [SyncVar]
     protected int MaxHP = 100;        // 최대 체력
 
     [SerializeField]
+    [SyncVar]
     protected int CurrentHP;           // 현재 체력
 
     [SerializeField]
+    [SyncVar]
     protected int Damage = 1;           // 데미지
 
     [SerializeField]
+    [SyncVar]
     protected int crashDamage = 100;    // 충돌 시 데미지
 
     [SerializeField]
+    [SyncVar]
     bool isDead = false;
 
     public bool IsDead
@@ -97,4 +102,58 @@ public class Actor : NetworkBehaviour
 
         SystemManager.Instance.GetCurrentSceneMain<InGameSceneMain>().EffectManger.GenerateEffect(EffectManager.ActorDeadFxIndex, transform.position);
     }
+
+    public void SetPosition(Vector3 position)
+    {
+        if (isServer)
+            RpcSetPosition(position);
+        else
+        {
+            CmdSetPosition(position);
+            if (isLocalPlayer)
+                transform.position = position;
+        }
+    }
+
+    [Command]
+    public void CmdSetPosition(Vector3 position)
+    {
+        this.transform.position = position;
+        base.SetDirtyBit(1);
+    }
+
+    [ClientRpc]
+    public void RpcSetPosition(Vector3 position)
+    {
+        this.transform.position = position;
+        base.SetDirtyBit(1);
+    }
+
+    [ClientRpc]
+    public void RpcSetActive(bool value)
+    {
+        this.gameObject.SetActive(value);
+        base.SetDirtyBit(1);
+    }
+
+    public void UpdateNetworkActor()
+    {
+        if (isServer)
+            RpcUpdateNetworkActor();
+        else
+            CmdUpdateNetworkActor();
+    }
+
+    [Command]
+    public void CmdUpdateNetworkActor()
+    {
+        base.SetDirtyBit(1);
+    }
+
+    [ClientRpc]
+    public void RpcUpdateNetworkActor()
+    {
+        base.SetDirtyBit(1);
+    }
+
 }

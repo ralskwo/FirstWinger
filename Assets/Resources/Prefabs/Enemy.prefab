@@ -120,6 +120,7 @@ GameObject:
   - component: {fileID: 543451405769849491}
   - component: {fileID: 6498036558446689251}
   - component: {fileID: 6304711803472391692}
+  - component: {fileID: 1080318610824861600}
   m_Layer: 8
   m_Name: Enemy
   m_TagString: Untagged
@@ -158,7 +159,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxHP: 100
-  CurrentHp: 0
+  CurrentHP: 0
   Damage: 35
   crashDamage: 100
   isDead: 0
@@ -166,9 +167,9 @@ MonoBehaviour:
   TargetPosition: {x: 0, y: 0, z: 0}
   CurrentSpeed: 0
   FireTransform: {fileID: 3785487774445585294}
-  Bullet: {fileID: 9031816513277853353, guid: 36884b86177a4014aa9d7e231155f251, type: 3}
   BulletSpeed: 10
   FireRemainCount: 3
+  GamePoint: 10
 --- !u!54 &6304711803472391692
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -185,6 +186,39 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1080318610824861600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4111609459924998814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8258ea15b8f74c4889ce485d21cbbb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 0
+    i1: 0
+    i2: 0
+    i3: 0
+    i4: 0
+    i5: 0
+    i6: 0
+    i7: 0
+    i8: 0
+    i9: 0
+    i10: 0
+    i11: 0
+    i12: 0
+    i13: 0
+    i14: 0
+    i15: 0
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!1 &8353421571708257727
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class Enemy : Actor
 {
@@ -15,45 +16,80 @@ public class Enemy : Actor
     }
 
     [SerializeField]
+    [SyncVar]
     State CurrentState = State.None;
     const float MaxSpeed = 10.0f;       // 최대 속력
     const float MaxSpeedTime = 0.5f;    // 퇴장 시 자연스러운 가속을 위한 속도
 
     [SerializeField]
+    [SyncVar]
     Vector3 TargetPosition;
 
     [SerializeField]
+    [SyncVar]
     float CurrentSpeed;
 
+    [SyncVar]
     Vector3 CurrentVelocity;
 
+    [SyncVar]
     float MoveStartTime = 0.0f;
 
     [SerializeField]
+    [SyncVar]
     Transform FireTransform;                // 발사 위치
 
     // [SerializeField]
     // GameObject Bullet;                      // 총알 오브젝트
 
     [SerializeField]
+    [SyncVar]
     float BulletSpeed = 1;                  // 발사 속도
 
+    [SyncVar]
     float LastActionUpdateTime = 0.0f;
 
     [SerializeField]
+    [SyncVar]
     int FireRemainCount = 1;
 
     [SerializeField]
+    [SyncVar]
     int GamePoint = 10;
+
+    [SyncVar]
+    [SerializeField]
+    string filePath;
 
     public string FilePath
     {
-        get;
-        set;
+        get
+        {
+            return filePath;
+        }
+        set
+        {
+            filePath = value;
+        }
     }
 
+    [SyncVar]
     Vector3 AppearPoint;            // 입장 시 도착 위치
+    [SyncVar]
     Vector3 DisappearPoint;         // 퇴장 시 목표 위치
+
+    protected override void Initialize()
+    {
+        base.Initialize();
+
+        if (!((FWNetworkManager)FWNetworkManager.singleton).isServer)
+        {
+            InGameSceneMain inGameSceneMain = SystemManager.Instance.GetCurrentSceneMain<InGameSceneMain>();
+            transform.SetParent(inGameSceneMain.EnemyManager.transform);
+            inGameSceneMain.EnemyCacheSystem.Add(FilePath, gameObject);
+            gameObject.SetActive(false);
+        }
+    }
 
     // Update is called once per frame
     protected override void UpdateActor()
@@ -149,6 +185,8 @@ public class Enemy : Actor
 
         CurrentState = State.Ready;
         LastActionUpdateTime = Time.time;
+
+        UpdateNetworkActor();
     }
 
 
