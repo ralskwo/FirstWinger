@@ -68,6 +68,10 @@ public class SceneController : MonoBehaviour
     {
 
     }
+    public void LoadSceneImmediate(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
+    }
 
     public void LoadScene(string sceneName)
     {

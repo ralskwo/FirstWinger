@@ -23,6 +23,29 @@ public class SystemManager : MonoBehaviour
         }
     }
 
+    [SerializeField]
+    ItemTable itemTable;
+
+    public ItemTable ItemTable
+    {
+        get
+        {
+            return itemTable;
+        }
+    }
+
+    [SerializeField]
+    ItemDropTable itemDropTable;
+
+    public ItemDropTable ItemDropTable
+    {
+        get
+        {
+            return itemDropTable;
+        }
+    }
+
+
     BaseSceneMain currentSceneMain;
     public BaseSceneMain CurrentSceneMain
     {
@@ -44,7 +67,7 @@ public class SystemManager : MonoBehaviour
     }
 
 
-    private void Awake()
+    void Awake()
     {
         // 유일하게 존재할 수 있도록 에러 처리
         if (instance != null)
@@ -64,7 +87,6 @@ public class SystemManager : MonoBehaviour
     void Start()
     {
         BaseSceneMain baseSceneMain = GameObject.FindObjectOfType<BaseSceneMain>();
-        Debug.Log("OnSceneLoaded! baseSceneMain.name = " + baseSceneMain.name);
         SystemManager.Instance.CurrentSceneMain = baseSceneMain;
     }
 

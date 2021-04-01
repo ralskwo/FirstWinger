@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 [System.Serializable]
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
 
-public struct SquadronMemberStuct
+public struct SquadronMemberStruct
 {
     public int index;
     public int EnemyID;
@@ -20,9 +20,9 @@ public struct SquadronMemberStuct
 
 }
 
-public class SquadronTable : TableLoader<SquadronMemberStuct>
+public class SquadronTable : TableLoader<SquadronMemberStruct>
 {
-    List<SquadronMemberStuct> tableDatas = new List<SquadronMemberStuct>();
+    List<SquadronMemberStruct> tableDatas = new List<SquadronMemberStruct>();
 
     // Start is called before the first frame update
     void Start()
@@ -36,17 +36,17 @@ public class SquadronTable : TableLoader<SquadronMemberStuct>
 
     }
 
-    protected override void AddData(SquadronMemberStuct data)
+    protected override void AddData(SquadronMemberStruct data)
     {
         tableDatas.Add(data);
     }
 
-    public SquadronMemberStuct GetSquadronMember(int index)
+    public SquadronMemberStruct GetSquadronMember(int index)
     {
         if (index < 0 || index >= tableDatas.Count)
         {
             Debug.LogError("GetSquadronMember Error! index = " + index);
-            return default(SquadronMemberStuct);
+            return default(SquadronMemberStruct);
         }
 
         return tableDatas[index];

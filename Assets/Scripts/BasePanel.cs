@@ -18,7 +18,7 @@ public class BasePanel : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        UpdatePanel();
     }
 
     private void OnDestroy()
@@ -26,17 +26,14 @@ public class BasePanel : MonoBehaviour
         DestroyPanel();
     }
 
-    private void onGUI()
-    {
-        if (GUILayout.Button("Close"))
-        {
-            Close();
-        }
-    }
-
     public virtual void InitializePanel()
     {
         PanelManager.RegistPanel(GetType(), this);
+    }
+
+    public virtual void UpdatePanel()
+    {
+
     }
 
     public virtual void DestroyPanel()

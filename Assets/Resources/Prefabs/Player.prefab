@@ -136,9 +136,13 @@ MonoBehaviour:
   MoveVector: {x: 0, y: 0, z: 0}
   NetworkIdentity: {fileID: 3079668647554625029}
   Speed: 5
-  boxcollider: {fileID: 4094529758771297018}
+  boxCollider: {fileID: 4094529758771297018}
   FireTransform: {fileID: 4094529758961698366}
   BulletSpeed: 10
+  Host: 0
+  ClientPlayerMaterial: {fileID: 2100000, guid: 8b52c4a2cbd2a8248b7c6e782e73497e,
+    type: 2}
+  UsableItemCount: 0
 --- !u!54 &4094529758567445280
 Rigidbody:
   m_ObjectHideFlags: 0

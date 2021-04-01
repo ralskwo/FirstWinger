@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class InputController
 {
@@ -44,10 +45,14 @@ public class InputController
     void UpdateMouse()
     {
         // [0, 1, 2, ...] : 마우스 왼쪽 버튼, 오른쪽 버튼, 중간(휠)버튼, 여타 추가 마우스 버튼들...
-        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetMouseButtonDown(0))
         {
-            // Debug.Log("click");
             SystemManager.Instance.GetCurrentSceneMain<InGameSceneMain>().Hero.Fire();
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            SystemManager.Instance.GetCurrentSceneMain<InGameSceneMain>().Hero.FireBomb();
         }
     }
 }

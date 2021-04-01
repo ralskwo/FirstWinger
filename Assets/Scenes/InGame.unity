@@ -296,6 +296,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyFactory: {fileID: 217822489}
+  enemies: []
   enemyFiles:
   - filePath: Prefabs/Enemy
     cacheCount: 20
@@ -1688,7 +1689,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcd8c94e27872974888f564c4b9c5580, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreVaule: {fileID: 1197741829}
+  scoreValue: {fileID: 0}
   HPGage: {fileID: 299744748}
 --- !u!114 &1474215990
 MonoBehaviour:
@@ -2408,16 +2409,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27999d48470cb844db1b170f3c9ef9dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
+  player: {fileID: 4094529758567445283, guid: fbe18c601e61fd844a0cb6ba2865a566, type: 3}
   effectManager: {fileID: 1615109455}
   enemyManager: {fileID: 305685254}
   bulletManager: {fileID: 1251632888}
   damageManager: {fileID: 1153661190}
+  itemBoxManager: {fileID: 0}
   squadronManager: {fileID: 1120910475}
   mainBGQuadTransform: {fileID: 370137276}
   inGameNetworkTransfer: {fileID: 885331508}
   playerStartTransform1: {fileID: 1884062456}
   playerStartTransform2: {fileID: 940825472}
+  BossEnemyID: 0
+  BossGeneratePos: {x: 0, y: 0, z: 0}
+  BossAppearPos: {x: 0, y: 0, z: 0}
 --- !u!4 &2031014394
 Transform:
   m_ObjectHideFlags: 0

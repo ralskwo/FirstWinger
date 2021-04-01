@@ -20,11 +20,11 @@ public class Gage : MonoBehaviour
 
     }
 
-    public void SetHP(float currnetValue, float MaxValue)
+    public void SetHP(float currentValue, float maxValue)
     {
-        if (currnetValue > MaxValue)
-            currnetValue = MaxValue;
+        if (currentValue > maxValue)
+            currentValue = maxValue;
 
-        slider.value = currnetValue / MaxValue;
+        slider.value = currentValue / maxValue;
     }
 }

@@ -7,6 +7,7 @@ public class EffectManager : MonoBehaviour
     // effect를 줄여서 Fx라고 하기도 한다.
     public const int BulletDisappearFxIndex = 0;
     public const int ActorDeadFxIndex = 1;
+    public const int BombExplodeFxIndex = 2;
 
 
     [SerializeField]
@@ -40,8 +41,8 @@ public class EffectManager : MonoBehaviour
         // GameObject go = Instantiate<GameObject>(effectPreFabs[index], position, Quaternion.identity);
 
         string filePath = effectFiles[index].filePath;
-        GameObject go = SystemManager.Instance.GetCurrentSceneMain<InGameSceneMain>().EffectCacheSystem.Archive(filePath);
-        go.transform.position = position;
+        GameObject go = SystemManager.Instance.GetCurrentSceneMain<InGameSceneMain>().EffectCacheSystem.Archive(filePath, position);
+        // go.transform.position = position;
 
         AutoCachableEffect effect = go.GetComponent<AutoCachableEffect>();
         effect.FilePath = filePath;
@@ -64,6 +65,8 @@ public class EffectManager : MonoBehaviour
                 Debug.LogError("Load error! path = " + resourcePath);
                 return null;
             }
+
+            FileCache.Add(resourcePath, go);
         }
         return go;
     }

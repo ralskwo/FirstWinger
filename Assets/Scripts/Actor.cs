@@ -9,9 +9,25 @@ public class Actor : NetworkBehaviour
     [SyncVar]
     protected int MaxHP = 100;        // 최대 체력
 
+    public int HPMax
+    {
+        get
+        {
+            return MaxHP;
+        }
+    }
+
     [SerializeField]
     [SyncVar]
     protected int CurrentHP;           // 현재 체력
+
+    public int HPCurrent
+    {
+        get
+        {
+            return CurrentHP;
+        }
+    }
 
     [SerializeField]
     [SyncVar]
@@ -23,7 +39,7 @@ public class Actor : NetworkBehaviour
 
     [SerializeField]
     [SyncVar]
-    bool isDead = false;
+    protected bool isDead = false;
 
     public bool IsDead
     {
@@ -41,6 +57,17 @@ public class Actor : NetworkBehaviour
         }
     }
 
+    [SyncVar]
+    protected int actorInstanceID = 0;
+
+    public int ActorInstanceID
+    {
+        get
+        {
+            return actorInstanceID;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -51,6 +78,12 @@ public class Actor : NetworkBehaviour
     protected virtual void Initialize()
     {
         CurrentHP = MaxHP;
+
+        if (isServer)
+        {
+            actorInstanceID = GetInstanceID();              // 객체의 고유 아이디 설정
+            RpcSetActorInstanceID(actorInstanceID);         // 서버에 ID값을 전송
+        }
     }
 
 
@@ -66,20 +99,35 @@ public class Actor : NetworkBehaviour
     }
 
     // 총알에 맞았을 때 호출
-    public virtual void OnBulletHited(Actor attacker, int damage, Vector3 hitPos)
+    public virtual void OnBulletHited(int damage, Vector3 hitPos)
     {
         Debug.Log("OnBulletHited damage = " + damage);
-        DecreasedHP(attacker, damage, hitPos);
+        DecreaseHP(damage, hitPos);
     }
 
     // 비행기끼리 부딛혔을 때 호출
-    public virtual void OnCrash(Actor attacker, int damage, Vector3 crashPos)
+    public virtual void OnCrash(int damage, Vector3 crashPos)
     {
-        Debug.Log("OnCrash attacker = " + attacker.name + ", damage = " + damage);
-        DecreasedHP(attacker, damage, crashPos);
+        DecreaseHP(damage, crashPos);
     }
 
-    protected virtual void DecreasedHP(Actor attacker, int value, Vector3 damagePos)
+    protected virtual void DecreaseHP(int value, Vector3 damagePos)
+    {
+        if (isDead)
+            return;
+
+        if (isServer)     
+            RpcDecreaseHP(value, damagePos);     
+        // else
+        // {
+        //     CmdDecreaseHP(value, damagePos);
+        //     if (isLocalPlayer)
+        //         InternalDecreaseHP(value, damagePos);
+        // }
+
+    }
+
+    protected virtual void InternalDecreaseHP(int value, Vector3 damagePos)
     {
         if (isDead)
             return;
@@ -91,16 +139,18 @@ public class Actor : NetworkBehaviour
 
         if (CurrentHP == 0)
         {
-            OnDead(attacker);
+            OnDead();
         }
     }
 
-    protected virtual void OnDead(Actor Killer)
+
+
+    protected virtual void OnDead()
     {
         Debug.Log(name + " OnDead");
         isDead = true;
 
-        SystemManager.Instance.GetCurrentSceneMain<InGameSceneMain>().EffectManger.GenerateEffect(EffectManager.ActorDeadFxIndex, transform.position);
+        SystemManager.Instance.GetCurrentSceneMain<InGameSceneMain>().EffectManager.GenerateEffect(EffectManager.ActorDeadFxIndex, transform.position);
     }
 
     public void SetPosition(Vector3 position)
@@ -136,24 +186,44 @@ public class Actor : NetworkBehaviour
         base.SetDirtyBit(1);
     }
 
-    public void UpdateNetworkActor()
+    [ClientRpc]
+    public void RpcSetActorInstanceID(int instID)
     {
-        if (isServer)
-            RpcUpdateNetworkActor();
-        else
-            CmdUpdateNetworkActor();
+        this.actorInstanceID = instID;
+
+        if (this.actorInstanceID != 0)
+            SystemManager.Instance.GetCurrentSceneMain<InGameSceneMain>().ActorManager.Regist(this.actorInstanceID, this);
+
+
+        base.SetDirtyBit(1);
     }
 
     [Command]
-    public void CmdUpdateNetworkActor()
+    public void CmdDecreaseHP(int value, Vector3 damagePos)
     {
+        InternalDecreaseHP(value, damagePos);
         base.SetDirtyBit(1);
     }
 
     [ClientRpc]
-    public void RpcUpdateNetworkActor()
+    public void RpcDecreaseHP(int value, Vector3 damagePos)
     {
+        InternalDecreaseHP(value, damagePos);
         base.SetDirtyBit(1);
     }
+
+
+    // [Command]
+    // public void CmdUpdateNetworkActor()
+    // {
+    //     base.SetDirtyBit(1);
+    // }
+
+    // [ClientRpc]
+    // public void RpcUpdateNetworkActor()
+    // {
+    //     base.SetDirtyBit(1);
+    // }
+
 
 }

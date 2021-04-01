@@ -14,11 +14,11 @@ public class PrefabCacheSystem
 {
     Dictionary<string, Queue<GameObject>> Caches = new Dictionary<string, Queue<GameObject>>();
 
-    public void GenerateCache(string filepath, GameObject gameObject, int cacheCount, Transform parentTransform = null)
+    public void GenerateCache(string filePath, GameObject gameObject, int cacheCount, Transform parentTransform = null)
     {
-        if (Caches.ContainsKey(filepath))
+        if (Caches.ContainsKey(filePath))
         {
-            Debug.LogWarning("Already cache generated! filePath = " + filepath);
+            Debug.LogWarning("Already cache generated! filePath = " + filePath);
             return;
         }
 
@@ -35,17 +35,30 @@ public class PrefabCacheSystem
                 Enemy enemy = go.GetComponent<Enemy>();
                 if (enemy != null)
                 {
-                    enemy.FilePath = filepath;
+                    enemy.FilePath = filePath;
                     NetworkServer.Spawn(go);
                 }
 
+                Bullet bullet = go.GetComponent<Bullet>();
+                if (bullet != null)
+                {
+                    bullet.FilePath = filePath;
+                    NetworkServer.Spawn(go);
+                }
+
+                ItemBox item = go.GetComponent<ItemBox>();
+                if (item != null)
+                {
+                    item.FilePath = filePath;
+                    NetworkServer.Spawn(go);
+                }
             }
 
-            Caches.Add(filepath, queue);
+            Caches.Add(filePath, queue);
         }
     }
 
-    public GameObject Archive(string filePath)
+    public GameObject Archive(string filePath, Vector3 position)
     {
         if (!Caches.ContainsKey(filePath))
         {
@@ -61,11 +74,29 @@ public class PrefabCacheSystem
 
         GameObject go = Caches[filePath].Dequeue();
         go.SetActive(true);
-
-        Enemy enemy = go.GetComponent<Enemy>();
-        if (enemy != null)
+        go.transform.position = position;
+        if (((FWNetworkManager)FWNetworkManager.singleton).isServer)
         {
-            enemy.RpcSetActive(true);
+            Enemy enemy = go.GetComponent<Enemy>();
+            if (enemy != null)
+            {
+                enemy.SetPosition(position);
+                enemy.RpcSetActive(true);
+            }
+
+            Bullet bullet = go.GetComponent<Bullet>();
+            if (bullet != null)
+            {
+                bullet.SetPosition(position);
+                bullet.RpcSetActive(true);
+            }
+
+            ItemBox item = go.GetComponent<ItemBox>();
+            if (item != null)
+            {
+                item.RpcSetPosition(position);
+                item.RpcSetActive(true);
+            }
         }
 
         return go;
@@ -81,13 +112,27 @@ public class PrefabCacheSystem
 
         gameObject.SetActive(false);
 
-        Enemy enemy = gameObject.GetComponent<Enemy>();
-        if (enemy != null)
+        if (((FWNetworkManager)FWNetworkManager.singleton).isServer)
         {
-            enemy.RpcSetActive(false);
+            Enemy enemy = gameObject.GetComponent<Enemy>();
+            if (enemy != null)
+            {
+                enemy.RpcSetActive(false);
+            }
+
+            Bullet bullet = gameObject.GetComponent<Bullet>();
+            if (bullet != null)
+            {
+                bullet.RpcSetActive(false);
+            }
+
+            ItemBox item = gameObject.GetComponent<ItemBox>();
+            if (item != null)
+            {
+                item.RpcSetActive(false);
+            }
+
         }
-
-
         Caches[filePath].Enqueue(gameObject);
         return true;
     }
@@ -104,5 +149,7 @@ public class PrefabCacheSystem
             queue = new Queue<GameObject>();
             Caches.Add(filePath, queue);
         }
+
+        queue.Enqueue(gameObject);
     }
 }

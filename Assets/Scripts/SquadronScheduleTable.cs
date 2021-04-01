@@ -6,16 +6,16 @@ using System.Runtime.InteropServices;
 [System.Serializable]
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
 
-public struct SquadronScheduleDataSturct
+public struct SquadronScheduleDataStruct
 {
     public int index;
     public float GenerateTime;
     public int SquadronID;
 }
 
-public class SquadronScheduleTable : TableLoader<SquadronScheduleDataSturct>
+public class SquadronScheduleTable : TableLoader<SquadronScheduleDataStruct>
 {
-    List<SquadronScheduleDataSturct> tableDatas = new List<SquadronScheduleDataSturct>();
+    List<SquadronScheduleDataStruct> tableDatas = new List<SquadronScheduleDataStruct>();
 
     // Start is called before the first frame update
     void Start()
@@ -29,20 +29,25 @@ public class SquadronScheduleTable : TableLoader<SquadronScheduleDataSturct>
 
     }
 
-    protected override void AddData(SquadronScheduleDataSturct data)
+    protected override void AddData(SquadronScheduleDataStruct data)
     {
         tableDatas.Add(data);
     }
 
-    public SquadronScheduleDataSturct GetScheduleData(int index)
+    public SquadronScheduleDataStruct GetScheduleData(int index)
     {
 
         if (index < 0 || index >= tableDatas.Count)
         {
             Debug.LogError("SquadronScheduleDataStruct Error! index = " + index);
-            return default(SquadronScheduleDataSturct);
+            return default(SquadronScheduleDataStruct);
         }
 
         return tableDatas[index];
+    }
+
+    public int GetDataCount()
+    {
+        return tableDatas.Count;
     }
 }

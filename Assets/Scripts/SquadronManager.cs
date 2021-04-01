@@ -7,7 +7,7 @@ public class SquadronManager : MonoBehaviour
 {
     float GameStartedTime;
 
-    int SquadronIndex;
+    int ScheduleIndex;
 
     [SerializeField]
     SquadronTable[] squadronDatas;
@@ -16,6 +16,9 @@ public class SquadronManager : MonoBehaviour
     SquadronScheduleTable squadronScheduleTable;
 
     bool running = false;
+
+    bool AllSquadronGenerated = false;
+    bool ShowWarningUICalled = false;
 
     // Start is called before the first frame update
     void Start()
@@ -30,17 +33,24 @@ public class SquadronManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*if (Input.GetKeyDown(KeyCode.K))
+        if (!AllSquadronGenerated)
+            CheckSquadronGeneratings();
+
+        else if (!ShowWarningUICalled)
         {
-            StartGame();
-        }*/
-        CheckSquadronGeneratings();
+            InGameSceneMain inGameSceneMain = SystemManager.Instance.GetCurrentSceneMain<InGameSceneMain>();
+            if (SystemManager.Instance.GetCurrentSceneMain<InGameSceneMain>().EnemyManager.GetEnemyListCount() == 0)
+            {
+                inGameSceneMain.ShowWarningUI();
+                ShowWarningUICalled = true;
+            }
+        }
     }
 
     public void StartGame()
     {
         GameStartedTime = Time.time;
-        SquadronIndex = 0;
+        ScheduleIndex = 0;
         running = true;
         Debug.Log("Game Started!");
     }
@@ -50,34 +60,38 @@ public class SquadronManager : MonoBehaviour
         if (!running)
             return;
 
-        if (Time.time - GameStartedTime >= squadronScheduleTable.GetScheduleData(SquadronIndex).GenerateTime)
-        {
-            GenerateSqudron(squadronDatas[SquadronIndex]);
-            SquadronIndex++;
+        SquadronScheduleDataStruct data = squadronScheduleTable.GetScheduleData(ScheduleIndex);
 
-            if (SquadronIndex >= squadronDatas.Length)
+        if (Time.time - GameStartedTime >= data.GenerateTime)
+        {
+            GenerateSquadron(squadronDatas[data.SquadronID]);
+            ScheduleIndex++;
+
+            if (ScheduleIndex >= squadronScheduleTable.GetDataCount())
             {
-                AllSquadronGenerated();
+                OnAllSquadronGenerated();
                 return;
             }
         }
     }
 
-    void GenerateSqudron(SquadronTable table)
+    void GenerateSquadron(SquadronTable table)
     {
-        Debug.Log("GenerateSquadron");
+        Debug.Log("GenerateSquadron : " + ScheduleIndex);
 
         for (int i = 0; i < table.GetCount(); i++)
         {
-            SquadronMemberStuct squadronMember = table.GetSquadronMember(i);
+            SquadronMemberStruct squadronMember = table.GetSquadronMember(i);
             SystemManager.Instance.GetCurrentSceneMain<InGameSceneMain>().EnemyManager.GenerateEnemy(squadronMember);
         }
     }
 
-    void AllSquadronGenerated()
+    void OnAllSquadronGenerated()
     {
         Debug.Log("AllSquadronGenerated");
 
         running = false;
+
+        AllSquadronGenerated = true;
     }
 }

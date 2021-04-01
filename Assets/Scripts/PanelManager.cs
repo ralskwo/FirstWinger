@@ -24,10 +24,8 @@ public class PanelManager : MonoBehaviour
         if (Panels.ContainsKey(PanelClassType))
         {
             Debug.LogError("RegistPanel Error! Already exist Type! PanelClassType = " + PanelClassType.ToString());
-            return true;
+            return false;
         }
-
-        Debug.Log("RegistPanel is called! Type = " + PanelClassType.ToString() + ", basePanel = " + basePanel.name);
 
         Panels.Add(PanelClassType, basePanel);
         return true;
@@ -49,7 +47,7 @@ public class PanelManager : MonoBehaviour
     {
         if (!Panels.ContainsKey(PanelClassType))
         {
-            Debug.LogError("GetPanel Error! Can't Find Type! GetPanel = " + PanelClassType.ToString());
+            Debug.LogError("GetPanel Error! Can't Find Type! PanelClassType = " + PanelClassType.ToString());
             return null;
         }
 

@@ -34,7 +34,7 @@ public class UIDamage : MonoBehaviour
     Text damageText;
 
     // 현재 위치
-    Vector3 currentVelocity;
+    Vector3 CurrentVelocity;
 
     // 나타나고 사라지기 시작하는 각 시작 시간
     float DisplayStartTime;
@@ -107,9 +107,9 @@ public class UIDamage : MonoBehaviour
 
                 // Vector3.SmoothDamp(현재 크기, 목표 크기, 나타날 위치, 커지는 단위)
                 // 데미지(transform)의 크기(localScale)을 부드럽게 키우기 위해(SmoothDamp)
-                // SmoothDamp(데미지의 크기(transform.localScale)가 Vector3.one(1. 100%를 의미)가 될 때까지 해당 위치(ref currentVelocity)에
+                // SmoothDamp(데미지의 크기(transform.localScale)가 Vector3.one(1. 100%를 의미)가 될 때까지 해당 위치(ref CurrentVelocity)에
                 //              설정된 시간(SizeUpDuration)만큼 증가한다)
-                transform.localScale = Vector3.SmoothDamp(transform.localScale, Vector3.one, ref currentVelocity, SizeUpDuration);
+                transform.localScale = Vector3.SmoothDamp(transform.localScale, Vector3.one, ref CurrentVelocity, SizeUpDuration);
 
                 // 위의 구문을 통해 transform.localScale이 Vector3.one에 도달했다면
                 if (transform.localScale == Vector3.one)

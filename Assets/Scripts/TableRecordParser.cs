@@ -13,7 +13,7 @@ public class MarshalTableConstant
 
 public class TableRecordParser<TMarshalStruct>
 {
-    public TMarshalStruct PaeseRecordLine(string line)
+    public TMarshalStruct ParseRecordLine(string line)
     {
         // TMarshalStruct 크기에 맞춰서 Byte 배열 할당
         Type type = typeof(TMarshalStruct);
@@ -29,7 +29,7 @@ public class TableRecordParser<TMarshalStruct>
         Type dataType;
         string splited;
         byte[] fieldByte;
-        //byte[] keyBytes;
+        byte[] keyBytes;
 
         FieldInfo[] fieldInfos = type.GetFields();                   // using System.Reflection.FieldInfo
 
@@ -45,8 +45,8 @@ public class TableRecordParser<TMarshalStruct>
             structBytesIndex += fieldByte.Length;
 
             // 첫 번째 필드를 Key값으로 사용하기 위해 백업
-            // if (i == 0)
-            //     keyBytes = fieldByte;
+            if (i == 0)
+                keyBytes = fieldByte;
         }
 
         // 마샬링

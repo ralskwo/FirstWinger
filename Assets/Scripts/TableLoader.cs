@@ -41,7 +41,8 @@ public class TableLoader<TMarshalStruct> : MonoBehaviour
                 continue;
             }
 
-            TMarshalStruct data = tableRecordParser.PaeseRecordLine(line);
+            TMarshalStruct data = tableRecordParser.ParseRecordLine(line);
+            AddData(data);
         }
     }
 
